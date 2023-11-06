@@ -1,0 +1,42 @@
+{
+  "name": "mddm-nfc",
+  "version": "1.0.1",
+  "description": "MDDM NFC Reader",
+  "main": "./src/main.js",
+  "scripts": {
+    "start": "electron-forge start",
+    "test": "",
+    "package": "electron-forge package",
+    "make": "electron-forge make"
+  },
+  "keywords": [
+    "nfc"
+  ],
+  "author": "Faizul",
+  "license": "ISC",
+  "dependencies": {
+    "@taptrack/ndef": "^1.0.3",
+    "aes-encryption": "^1.0.4",
+    "crypto-js": "^4.1.1",
+    "dotenv": "^16.3.1",
+    "electron-compile": "^6.4.4",
+    "electron-squirrel-startup": "^1.0.0",
+    "gibberish-aes": "^1.0.0",
+    "java": "^0.12.2",
+    "nfc-pcsc": "^0.8.1",
+    "nfccard-tool": "^0.1.1",
+    "node-gyp": "^9.4.0",
+    "pcsclite": "^1.0.1",
+    "xlsx": "^0.18.5"
+  },
+  "devDependencies": {
+    "@electron-forge/cli": "^6.4.1",
+    "@electron-forge/maker-deb": "^6.4.1",
+    "@electron-forge/maker-rpm": "^6.4.1",
+    "@electron-forge/maker-squirrel": "^6.4.1",
+    "@electron-forge/maker-zip": "^6.4.1",
+    "@electron-forge/plugin-auto-unpack-natives": "^6.4.1",
+    "@electron/rebuild": "^3.2.13",
+    "electron": "^7.3.3"
+  }
+}

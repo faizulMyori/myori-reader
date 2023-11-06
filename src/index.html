@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>MyOri NFC Reader (MDDM)</title>
+    <meta http-equiv="Content-Security-Policy"/>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="../src/assets/bootstrap/css/bootstrap.min.css" />
+    
+    <!-- Bootstrap Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    
+    <style>
+        table {
+          font-family: arial, sans-serif;
+          border-collapse: collapse;
+          width: 100%;
+        }
+        
+        td, th {
+          border: 1px solid #dddddd;
+          text-align: left;
+          padding: 8px;
+        }
+        
+        tr:nth-child(even) {
+          background-color: #dddddd;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <br>
+        <div class="row">
+            <div class="col-6">
+                <label for="device">Select Device</label>
+                <select name="selectDevice" class="form-control" id="selectDevice">
+                    <option value="">Please Select</option>
+                </select>
+            </div>
+            <div class="col-6">
+                <label for="output">Output</label>
+                <input type="text" class="form-control" value="" id="output" readonly>
+            </div>
+        </div>
+        <br>
+        <input type="hidden" name="lblNFC" id="lblNFC">
+        <div class="row">
+            <div class="col-12">
+                <label for="search">Search</label>
+                <input type="text" class="form-control" id="searchTbl" placeholder="DATUK AWALAN BIN ABDUL AZIZ">
+            </div>
+        </div>
+        <br>
+        <table id="myTable">
+            <thead>
+                <tr>
+                    <th>No</th>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody id="tblMembers">
+                
+            </tbody>
+        </table>
+    </div>
+</body>
+
+<script type="module" src="../src/js/index.js"></script>
+
+<script>
+    if (typeof module === 'object') {
+        window.module = module;
+        module = undefined;
+    }
+</script>
+
+<script src="../src/assets/jquery/jquery-3.6.0.min.js"></script>
+<script src="../src/assets/bootstrap/js/bootstrap.bundle.js"></script>
+<script>
+    let { app, remote, BrowserWindow, dialog } = require("electron");
+    function assignMember(id) {
+
+        const json = {
+            mddm_id: id,
+            sticker: document.getElementById('lblNFC').value
+        };
+
+        var result = confirm("Confirm Assignation?");
+        if (result) {
+            fetch('https://ssstaging.myori.my/api/scan/mddm/member/post', {
+                method: 'POST',
+                body: JSON.stringify(json),
+                headers: { 
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                    'Authorization': 'Bearer 1|6EreDnpt3sdv1lOPJOquke8kGVSXcH37ZOGUUoSb'
+                }
+            }).then(res => res.json())
+            .then(async json => {
+                let data = await json.data
+
+                if (data)  {
+                    alert("Success!")
+                } else {
+                    alert("Error!")
+                }
+
+                remote.getCurrentWindow().reload()
+            })
+        }
+    }
+    
+    $(document).ready(function(){
+        $("#searchTbl").on("keyup", function() {
+            var value = $(this).val().toLowerCase();
+            $("#myTable tr").filter(function() {
+                $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+            });
+        });
+    });
+</script>
+<script>
+    if (window.module) module = window.module;
+
+</script>
+</html>
