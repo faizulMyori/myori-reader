@@ -51,7 +51,7 @@ document.getElementById('selectDevice').addEventListener('change', () => {
                 if (checkEmblem) {
                     const json = {
                         tag: card.uid,
-                        lbl: nfcData,
+                        lbl: nfcData.slice(0, 28),
                         enc: getEnc,
                         device: {},
                     };
@@ -60,12 +60,12 @@ document.getElementById('selectDevice').addEventListener('change', () => {
                 }
             } else {
                 isOnline(true)
-                nfcData = 'Uknown NFC';
+                nfcData = 'Unknown NFC';
                 document.getElementById('output').value = nfcData
             }
         } catch (err) {
             isOnline(true)
-            nfcData = 'Uknown NFC';
+            nfcData = 'Unknown NFC';
             document.getElementById('output').value = nfcData
         }
     });
@@ -165,7 +165,7 @@ async function postMember(json) {
             msg = "Valid NFC"
             isOnline(false)
         } else {
-            msg = 'Uknown NFC';
+            msg = 'Unknown NFC';
             isOnline(true)
         }
 
