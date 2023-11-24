@@ -30,57 +30,97 @@
             margin: 5%;
         }
         .table-responsive {
-            max-height:300px;
+            max-height:320px;
         }
     </style>
 </head>
 <body>
-        <div class="row">
-            <div class="col-6" style="border-right: 1px solid black;">
-                <div class="row">
-                    <div class="col-6">
-                        <h4>Select Device</h4>
-                        <select name="selectDevice" class="form-control" id="selectDevice">
-                            <option value="">Please Select</option>
-                        </select>
-                    </div>
-                    <div class="col-6">
-                        <h4>Output</h4>
-                        <input type="text" class="form-control" value="" id="output" readonly>
-                    </div>
+    <div class="row">
+        <div class="col-6" style="border-right: 1px solid black;">
+            <div class="row">
+                <div class="col-6">
+                    <h4>Select Device</h4>
+                    <select name="selectDevice" class="form-control" id="selectDevice">
+                        <option value="">Please Select</option>
+                    </select>
                 </div>
-                <br>
-                <div class="row">
-                    <div class="col-12">
-                        <h4>Serial No.</h4>
-                        <input type="text" class="form-control" name="lblNFC" id="lblNFC" readonly>
-                    </div>
-                </div>
-                <br>
-                <div class="row">
-                    <div class="col-12">
-                        <h4>Search</h4>
-                        <input type="text" class="form-control" id="searchTbl" placeholder="DATUK AWALAN BIN ABDUL AZIZ">
-                    </div>
+                <div class="col-6">
+                    <h4>Output</h4>
+                    <input type="text" class="form-control" value="" id="output" readonly>
                 </div>
             </div>
-            <div class="col-6">
-                <h4>Member List</h4>
-                <table id="myTable" class="table-responsive">
-                    <thead>
-                        <tr>
-                            <th>No</th>
-                            <th>ID</th>
-                            <th>Name</th>
-                            <th>Action</th>
-                        </tr>
-                    </thead>
-                    <tbody id="tblMembers">
-                        
-                    </tbody>
-                </table>
+            <br>
+            <div class="row">
+                <div class="col-12">
+                    <h4>Serial No.</h4>
+                    <input type="text" class="form-control" name="lblNFC" id="lblNFC" readonly>
+                </div>
+            </div>
+            <br>
+            <div class="row">
+                <div class="col-12">
+                    <h4>Used By</h4>
+                    <input type="text" class="form-control" name="usedBy" id="usedBy" readonly>
+                </div>
+            </div>
+            <br>
+            <div class="row">
+                <div class="col-12">
+                    <h4>Search</h4>
+                    <input type="text" class="form-control" id="searchTbl" placeholder="DATUK AWALAN BIN ABDUL AZIZ">
+                </div>
             </div>
         </div>
+        <div class="col-6">
+            <h4>Member List</h4>
+            <table id="myTable" class="table-responsive">
+                <thead>
+                    <tr>
+                        <th>No</th>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody id="tblMembers">
+                    
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="modal fade" id="successModal" tabindex="-1" role="dialog" aria-labelledby="successModalTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="successTitle">Modal title</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+          </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="promptModal" tabindex="-1" role="dialog" aria-labelledby="promptModalTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle">Are you sure to submit?</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-footer">
+                <input type="hidden" id="promptId">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+                <button type="button" class="btn btn-primary"  onclick="memberProcess()">Yes</button>
+            </div>
+          </div>
+        </div>
+    </div>
 </body>
 
 <script type="module" src="../src/js/index.js"></script>
@@ -98,33 +138,41 @@
     let { app, remote, BrowserWindow, dialog } = require("electron");
     function assignMember(id) {
 
+        
+
+        $('#promptId').val(id)
+        $('#promptModal').modal('show');
+    }
+
+    function memberProcess() {
         const json = {
-            mddm_id: id,
+            mddm_id: document.getElementById('promptId').value,
             sticker: document.getElementById('lblNFC').value
         };
 
-        var result = confirm("Confirm Assignation?");
-        if (result) {
-            fetch('https://ssstaging.myori.my/api/scan/mddm/member/post', {
-                method: 'POST',
-                body: JSON.stringify(json),
-                headers: { 
-                    'Content-Type': 'application/json',
-                    'Accept': 'application/json',
-                    'Authorization': 'Bearer 1|6EreDnpt3sdv1lOPJOquke8kGVSXcH37ZOGUUoSb'
-                }
-            }).then(res => res.json())
-            .then(async json => {
-                let data = await json.data
+        fetch('https://ssstaging.myori.my/api/scan/mddm/member/post', {
+            method: 'POST',
+            body: JSON.stringify(json),
+            headers: { 
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+                'Authorization': 'Bearer 1|6EreDnpt3sdv1lOPJOquke8kGVSXcH37ZOGUUoSb'
+            }
+        }).then(res => res.json())
+        .then(async json => {
+            let data = await json.data
+            $('#promptModal').modal('hide');
 
-                if (data)  {
-                    alert("Success!")
-                } else {
-                    alert("Error!")
-                }
-                getMemberList(true);
-            })
-        }
+            if (data)  {
+                $('#successModal').modal('show');
+                $('#successTitle').text('Success!')
+            } else {
+                $('#successModal').modal('show');
+                $('#successTitle').text('Error!')
+            }
+
+            getMemberList(true);
+        })
     }
 
     async function getMemberList(disabled) {
@@ -162,8 +210,8 @@
         });
         html += "";
         document.getElementById("tblMembers").innerHTML = html;
-        document.getElementById('output').value = "Device Selected"
-        document.getElementById('lblNFC').value = ""
+        document.getElementById('output').value = "Device Selected";
+        document.getElementById('lblNFC').value = "";
     }
 
     async function getMembers() {

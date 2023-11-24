@@ -160,6 +160,7 @@ async function postMember(json) {
     }).then(res => res.json())
     .then(async json => {
         let data = await json.data2
+        
         let msg = ''
         if (data)  {
             msg = "Valid NFC"
@@ -167,6 +168,12 @@ async function postMember(json) {
         } else {
             msg = 'Unknown NFC';
             isOnline(true)
+        }
+
+        if (json.data) {
+            document.getElementById('usedBy').value = json.data.name
+        } else {
+            document.getElementById('usedBy').value = ''
         }
 
         document.getElementById('output').value = msg
