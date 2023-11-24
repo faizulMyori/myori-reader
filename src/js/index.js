@@ -55,18 +55,18 @@ document.getElementById('selectDevice').addEventListener('change', () => {
                         enc: getEnc,
                         device: {},
                     };
-                    document.getElementById('lblNFC').value = nfcData
+                    document.getElementById('lblNFC').value = nfcData.slice(0, 28)
                     postMember(json)
                 }
             } else {
                 isOnline(true)
                 nfcData = 'Unknown NFC';
-                document.getElementById('output').value = nfcData
+                document.getElementById('output').value = nfcData.slice(0, 28)
             }
         } catch (err) {
             isOnline(true)
             nfcData = 'Unknown NFC';
-            document.getElementById('output').value = nfcData
+            document.getElementById('output').value = nfcData.slice(0, 28)
         }
     });
   } else {
@@ -133,7 +133,7 @@ async function d_box () {
 
 async function getMembers() {
     let data = []
-    await fetch('https://ssstaging.myori.my/api/scan/mddm/members', {
+    await fetch('http://127.0.0.1:8000/api/scan/mddm/members', {
         method: 'POST',
         headers: { 
             'Content-Type': 'application/json',
@@ -149,7 +149,7 @@ async function getMembers() {
 }
 
 async function postMember(json) {
-    await fetch('https://ssstaging.myori.my/api/scan/mddm/member', {
+    await fetch('http://127.0.0.1:8000/api/scan/mddm/member', {
         method: 'POST',
         body: JSON.stringify(json),
         headers: { 

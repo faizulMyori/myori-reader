@@ -26,46 +26,61 @@
         tr:nth-child(even) {
           background-color: #dddddd;
         }
+        body {
+            margin: 5%;
+        }
+        .table-responsive {
+            max-height:300px;
+        }
     </style>
 </head>
 <body>
-    <div class="container">
-        <br>
         <div class="row">
-            <div class="col-6">
-                <label for="device">Select Device</label>
-                <select name="selectDevice" class="form-control" id="selectDevice">
-                    <option value="">Please Select</option>
-                </select>
+            <div class="col-6" style="border-right: 1px solid black;">
+                <div class="row">
+                    <div class="col-6">
+                        <h4>Select Device</h4>
+                        <select name="selectDevice" class="form-control" id="selectDevice">
+                            <option value="">Please Select</option>
+                        </select>
+                    </div>
+                    <div class="col-6">
+                        <h4>Output</h4>
+                        <input type="text" class="form-control" value="" id="output" readonly>
+                    </div>
+                </div>
+                <br>
+                <div class="row">
+                    <div class="col-12">
+                        <h4>Serial No.</h4>
+                        <input type="text" class="form-control" name="lblNFC" id="lblNFC" readonly>
+                    </div>
+                </div>
+                <br>
+                <div class="row">
+                    <div class="col-12">
+                        <h4>Search</h4>
+                        <input type="text" class="form-control" id="searchTbl" placeholder="DATUK AWALAN BIN ABDUL AZIZ">
+                    </div>
+                </div>
             </div>
             <div class="col-6">
-                <label for="output">Output</label>
-                <input type="text" class="form-control" value="" id="output" readonly>
+                <h4>Member List</h4>
+                <table id="myTable" class="table-responsive">
+                    <thead>
+                        <tr>
+                            <th>No</th>
+                            <th>ID</th>
+                            <th>Name</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tblMembers">
+                        
+                    </tbody>
+                </table>
             </div>
         </div>
-        <br>
-        <input type="hidden" name="lblNFC" id="lblNFC">
-        <div class="row">
-            <div class="col-12">
-                <label for="search">Search</label>
-                <input type="text" class="form-control" id="searchTbl" placeholder="DATUK AWALAN BIN ABDUL AZIZ">
-            </div>
-        </div>
-        <br>
-        <table id="myTable">
-            <thead>
-                <tr>
-                    <th>No</th>
-                    <th>ID</th>
-                    <th>Name</th>
-                    <th>Action</th>
-                </tr>
-            </thead>
-            <tbody id="tblMembers">
-                
-            </tbody>
-        </table>
-    </div>
 </body>
 
 <script type="module" src="../src/js/index.js"></script>
@@ -90,7 +105,7 @@
 
         var result = confirm("Confirm Assignation?");
         if (result) {
-            fetch('https://ssstaging.myori.my/api/scan/mddm/member/post', {
+            fetch('http://127.0.0.1:8000/api/scan/mddm/member/post', {
                 method: 'POST',
                 body: JSON.stringify(json),
                 headers: { 
@@ -107,10 +122,65 @@
                 } else {
                     alert("Error!")
                 }
-
-                remote.getCurrentWindow().reload()
+                getMemberList(true);
             })
         }
+    }
+
+    async function getMemberList(disabled) {
+        let datas = await getMembers()
+        let members = []
+        var mytable = [];
+        if (datas.length > 0) {
+            datas.forEach(data => {
+                let checkID = members.find(e => e.id == data.id)
+                if (!checkID) members.push(data)
+            })
+        }
+        
+        members.forEach(function (member, i) {
+            let btn = '<button onClick="assignMember('+ member.id +')" class="btn btn-success" disabled>Assign</button>'
+            if (!disabled)  {
+                btn = '<button onClick="assignMember('+ member.id +')" class="btn btn-success">Assign</button>'
+            }
+            var obj = {
+                "no": i + 1,
+                "id": member.mddm_id,
+                "name": member.name,
+                "action": btn
+            };
+            mytable.push(obj);
+        })
+
+        var html = "";
+        mytable.forEach(function(entry) {
+            html += "<tr>";
+            for (var k in entry){
+                    html += "<td>" + entry[k] + "</td>";
+            }
+            html += "</tr>";
+        });
+        html += "";
+        document.getElementById("tblMembers").innerHTML = html;
+        document.getElementById('output').value = "Device Selected"
+        document.getElementById('lblNFC').value = ""
+    }
+
+    async function getMembers() {
+        let data = []
+        await fetch('http://127.0.0.1:8000/api/scan/mddm/members', {
+            method: 'POST',
+            headers: { 
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+                'Authorization': 'Bearer 1|6EreDnpt3sdv1lOPJOquke8kGVSXcH37ZOGUUoSb'
+            }
+        }).then(res => res.json())
+        .then(async json => {
+            data = await json.data
+            return data
+        })
+        return data
     }
     
     $(document).ready(function(){
