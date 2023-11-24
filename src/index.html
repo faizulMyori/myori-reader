@@ -105,7 +105,7 @@
 
         var result = confirm("Confirm Assignation?");
         if (result) {
-            fetch('http://127.0.0.1:8000/api/scan/mddm/member/post', {
+            fetch('https://ssstaging.myori.my/api/scan/mddm/member/post', {
                 method: 'POST',
                 body: JSON.stringify(json),
                 headers: { 
@@ -168,7 +168,7 @@
 
     async function getMembers() {
         let data = []
-        await fetch('http://127.0.0.1:8000/api/scan/mddm/members', {
+        await fetch('https://ssstaging.myori.my/api/scan/mddm/members', {
             method: 'POST',
             headers: { 
                 'Content-Type': 'application/json',
