@@ -46,4 +46,5 @@ NODE_MODULE(pcsclite, init_all)
 ```
 npm run start  #run
 npm run make  #compile
+npm run dev #dev
 ```
