@@ -1,5 +1,15 @@
 const { app, BrowserWindow, Menu, webContents  } = require('electron')
 const path = require('path')
+const env ='development'; 
+
+if (env === 'development') { 
+  try { 
+    require('electron-reloader')(module, { 
+      debug: true, 
+      watchRenderer: true
+    }); 
+  } catch (_) { console.log('Error'); }
+}
 
 function createWindow () {
   const win = new BrowserWindow({

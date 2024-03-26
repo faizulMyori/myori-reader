@@ -11,114 +11,144 @@
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
     
     <style>
-        table {
-          font-family: arial, sans-serif;
-          border-collapse: collapse;
-          width: 100%;
-        }
-        
-        td, th {
-          border: 1px solid #dddddd;
-          text-align: left;
-          padding: 8px;
-        }
-        
-        tr:nth-child(even) {
-          background-color: #dddddd;
-        }
-        body {
-            margin: 5%;
-        }
-        .table-responsive {
-            max-height:320px;
+        html, body {
+            height: 100%;
         }
     </style>
 </head>
 <body>
-    <div class="row">
-        <div class="col-6" style="border-right: 1px solid black;">
-            <div class="row">
-                <div class="col-6">
-                    <h4>Select Device</h4>
-                    <select name="selectDevice" class="form-control" id="selectDevice">
-                        <option value="">Please Select</option>
-                    </select>
+    <div class="container" style="height: 100%; padding-top:5px; padding-bottom:5px;">
+        <div class="row" style="height: 50%;">
+            <div class="col-6" style="width: 100%; border: solid black 1px;">
+                <div class="row">
+                    <div class="col-6">
+                        <label><b>NFC Reader 1</b></label>
+                        <select name="nfc_reader1"  id="nfc_reader1" class="form-control nfc_list">
+                            <option value="">Please Select</option>
+                        </select>
+                    </div>
+                    <div class="col-6">
+                        <label><b>Action 1</b></label>
+                        <select name="action_reader1" id="action_reader1" class="form-control action_list">
+                            <option value="">Please Select</option>
+                        </select>
+                    </div>
                 </div>
-                <div class="col-6">
-                    <h4>Output</h4>
-                    <input type="text" class="form-control" value="" id="output" readonly>
+                <br>
+                <div class="row">
+                    <div class="col-12">
+                        <div class="table-responsive">
+                            <table style="width: 100%;"  class="table">
+                                <thead class="thead-dark">
+                                    <tr>
+                                        <th>No</th>
+                                        <th>Tag</th>
+                                        <th>Serial</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <!-- <tr>
+                                        <td>1</td>
+                                        <td>2</td>
+                                        <td>2</td>
+                                        <td>4</td>
+                                    </tr> -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
                 </div>
             </div>
-            <br>
-            <div class="row">
-                <div class="col-12">
-                    <h4>Serial No.</h4>
-                    <input type="text" class="form-control" name="lblNFC" id="lblNFC" readonly>
+            <div class="col-6" style="width: 100%; border: solid black 1px;">
+                <div class="row">
+                    <div class="col-6">
+                        <label><b>NFC Reader 2</b></label>
+                        <select name="nfc_reader2"  id="nfc_reader2" class="form-control nfc_list">
+                            <option value="">Please Select</option>
+                        </select>
+                    </div>
+                    <div class="col-6">
+                        <label><b>Action 2</b></label>
+                        <select name="action_reader2" id="action_reader2" class="form-control action_list">
+                            <option value="">Please Select</option>
+                        </select>
+                    </div>
                 </div>
-            </div>
-            <br>
-            <div class="row">
-                <div class="col-12">
-                    <h4>Used By</h4>
-                    <input type="text" class="form-control" name="usedBy" id="usedBy" readonly>
-                </div>
-            </div>
-            <br>
-            <div class="row">
-                <div class="col-12">
-                    <h4>Search</h4>
-                    <input type="text" class="form-control" id="searchTbl" placeholder="DATUK AWALAN BIN ABDUL AZIZ">
+                <br>
+                <div class="row">
+                    <div class="col-12">
+                        <div class="table-responsive">
+                            <table style="width: 100%;"  class="table">
+                                <thead class="thead-dark">
+                                    <tr>
+                                        <th>No</th>
+                                        <th>Tag</th>
+                                        <th>Serial</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <!-- <tr>
+                                        <td>1</td>
+                                        <td>2</td>
+                                        <td>2</td>
+                                        <td>4</td>
+                                    </tr> -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
-        <div class="col-6">
-            <h4>Member List</h4>
-            <table id="myTable" class="table-responsive">
-                <thead>
-                    <tr>
-                        <th>No</th>
-                        <th>ID</th>
-                        <th>Name</th>
-                        <th>Action</th>
-                    </tr>
-                </thead>
-                <tbody id="tblMembers">
-                    
-                </tbody>
-            </table>
-        </div>
-    </div>
-    <div class="modal fade" id="successModal" tabindex="-1" role="dialog" aria-labelledby="successModalTitle" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title" id="successTitle">Modal title</h5>
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-              </button>
+        <div class="row" style="height: 50%;">
+            <div class="col-6" style="width: 100%; border: solid black 1px;">
+                <div class="row">
+                    <div class="col-6">
+                        <label><b>NFC Reader 3</b></label>
+                        <select name="nfc_reader3"  id="nfc_reader3" class="form-control nfc_list">
+                            <option value="">Please Select</option>
+                        </select>
+                    </div>
+                    <div class="col-6">
+                        <label><b>Action 3</b></label>
+                        <select name="action_reader3" id="action_reader3" class="form-control action_list">
+                            <option value="">Please Select</option>
+                        </select>
+                    </div>
+                </div>
+                <br>
+                <div class="row">
+                    <div class="col-12">
+                        <div class="table-responsive">
+                            <table style="width: 100%;"  class="table">
+                                <thead class="thead-dark">
+                                    <tr>
+                                        <th>No</th>
+                                        <th>Tag</th>
+                                        <th>Serial</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <!-- <tr>
+                                        <td>1</td>
+                                        <td>2</td>
+                                        <td>2</td>
+                                        <td>4</td>
+                                    </tr> -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <div class="col-6" style="width: 100%; border: solid black 1px;">
+                <div class="row" style="padding:5px;">
+                    <label><b>Action Panel</b></label>
+                </div>
             </div>
-          </div>
-        </div>
-    </div>
-
-    <div class="modal fade" id="promptModal" tabindex="-1" role="dialog" aria-labelledby="promptModalTitle" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-          <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLongTitle">Are you sure to submit?</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-footer">
-                <input type="hidden" id="promptId">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
-                <button type="button" class="btn btn-primary"  onclick="memberProcess()">Yes</button>
-            </div>
-          </div>
         </div>
     </div>
 </body>
@@ -136,109 +166,8 @@
 <script src="../src/assets/bootstrap/js/bootstrap.bundle.js"></script>
 <script>
     let { app, remote, BrowserWindow, dialog } = require("electron");
-    function assignMember(id) {
-
-        
-
-        $('#promptId').val(id)
-        $('#promptModal').modal('show');
-    }
-
-    function memberProcess() {
-        const json = {
-            mddm_id: document.getElementById('promptId').value,
-            sticker: document.getElementById('lblNFC').value
-        };
-
-        fetch('https://ssstaging.myori.my/api/scan/mddm/member/post', {
-            method: 'POST',
-            body: JSON.stringify(json),
-            headers: { 
-                'Content-Type': 'application/json',
-                'Accept': 'application/json',
-                'Authorization': 'Bearer 1|6EreDnpt3sdv1lOPJOquke8kGVSXcH37ZOGUUoSb'
-            }
-        }).then(res => res.json())
-        .then(async json => {
-            let data = await json.data
-            $('#promptModal').modal('hide');
-
-            if (data)  {
-                $('#successModal').modal('show');
-                $('#successTitle').text('Success!')
-            } else {
-                $('#successModal').modal('show');
-                $('#successTitle').text('Error!')
-            }
-
-            getMemberList(true);
-        })
-    }
-
-    async function getMemberList(disabled) {
-        let datas = await getMembers()
-        let members = []
-        var mytable = [];
-        if (datas.length > 0) {
-            datas.forEach(data => {
-                let checkID = members.find(e => e.id == data.id)
-                if (!checkID) members.push(data)
-            })
-        }
-        
-        members.forEach(function (member, i) {
-            let btn = '<button onClick="assignMember('+ member.id +')" class="btn btn-success" disabled>Assign</button>'
-            if (!disabled)  {
-                btn = '<button onClick="assignMember('+ member.id +')" class="btn btn-success">Assign</button>'
-            }
-            var obj = {
-                "no": i + 1,
-                "id": member.mddm_id,
-                "name": member.name,
-                "action": btn
-            };
-            mytable.push(obj);
-        })
-
-        var html = "";
-        mytable.forEach(function(entry) {
-            html += "<tr>";
-            for (var k in entry){
-                    html += "<td>" + entry[k] + "</td>";
-            }
-            html += "</tr>";
-        });
-        html += "";
-        document.getElementById("tblMembers").innerHTML = html;
-        document.getElementById('output').value = "Device Selected";
-        document.getElementById('lblNFC').value = "";
-    }
-
-    async function getMembers() {
-        let data = []
-        await fetch('https://ssstaging.myori.my/api/scan/mddm/members', {
-            method: 'POST',
-            headers: { 
-                'Content-Type': 'application/json',
-                'Accept': 'application/json',
-                'Authorization': 'Bearer 1|6EreDnpt3sdv1lOPJOquke8kGVSXcH37ZOGUUoSb'
-            }
-        }).then(res => res.json())
-        .then(async json => {
-            data = await json.data
-            return data
-        })
-        return data
-    }
     
-    $(document).ready(function(){
-        $("#searchTbl").on("keyup", function() {
-            var value = $(this).val().toLowerCase();
-            $("#myTable tr").filter(function() {
-                $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
-            });
-        });
-    });
+    
 </script>
 <script>
     if (window.module) module = window.module;

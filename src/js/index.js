@@ -133,12 +133,12 @@ async function d_box () {
 
 async function getMembers() {
     let data = []
-    await fetch('https://ssstaging.myori.my/api/scan/mddm/members', {
+    await fetch('https://smartsecure.myori.my/api/scan/mddm/members', {
         method: 'POST',
         headers: { 
             'Content-Type': 'application/json',
             'Accept': 'application/json',
-            'Authorization': 'Bearer 1|6EreDnpt3sdv1lOPJOquke8kGVSXcH37ZOGUUoSb'
+            'Authorization': 'Bearer 17|oKaR5J5trg2msrsz9d08wowauZ5LaD3CaZksdbbM'
         }
     }).then(res => res.json())
     .then(async json => {
@@ -149,13 +149,13 @@ async function getMembers() {
 }
 
 async function postMember(json) {
-    await fetch('https://ssstaging.myori.my/api/scan/mddm/member', {
+    await fetch('https://smartsecure.myori.my/api/scan/mddm/member', {
         method: 'POST',
         body: JSON.stringify(json),
         headers: { 
             'Content-Type': 'application/json',
             'Accept': 'application/json',
-            'Authorization': 'Bearer 1|6EreDnpt3sdv1lOPJOquke8kGVSXcH37ZOGUUoSb'
+            'Authorization': 'Bearer 17|oKaR5J5trg2msrsz9d08wowauZ5LaD3CaZksdbbM'
         }
     }).then(res => res.json())
     .then(async json => {

@@ -1,4 +1,4 @@
-<h4 align="center">MYORI MDDM NFC Reader</h4>
+<h4 align="center">MYORI NFC Reader</h4>
 
 
 <p>Steps:</p>
