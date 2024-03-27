@@ -1,7 +1,7 @@
 {
-  "name": "mddm-nfc",
+  "name": "myori-petronas",
   "version": "1.0.1",
-  "description": "MDDM NFC Reader",
+  "description": "MyOri Petronas NFC Reader",
   "main": "./src/main.js",
   "scripts": {
     "start": "electron-forge start",
@@ -18,6 +18,7 @@
   "dependencies": {
     "@taptrack/ndef": "^1.0.3",
     "aes-encryption": "^1.0.4",
+    "bootstrap-select": "^1.13.18",
     "crypto-js": "^4.1.1",
     "dotenv": "^16.3.1",
     "electron-compile": "^6.4.4",
@@ -25,10 +26,12 @@
     "electron-window-manager": "^1.0.6",
     "gibberish-aes": "^1.0.0",
     "java": "^0.12.2",
+    "jquery": "^3.7.1",
     "nfc-pcsc": "^0.8.1",
     "nfccard-tool": "^0.1.1",
     "node-gyp": "^9.4.0",
     "pcsclite": "^1.0.1",
+    "select2": "^4.1.0-rc.0",
     "xlsx": "^0.18.5"
   },
   "devDependencies": {

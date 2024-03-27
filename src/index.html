@@ -2,10 +2,11 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>MyOri NFC Reader (MDDM)</title>
+    <title>MyOri NFC Reader (Petronas)</title>
     <meta http-equiv="Content-Security-Policy"/>
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="../src/assets/bootstrap/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="../src/assets/select2/css/bootstrap-select.min.css" />
     
     <!-- Bootstrap Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
@@ -14,6 +15,11 @@
         html, body {
             height: 100%;
         }
+        .table-wrap {
+            height: 120px;
+            overflow-y: auto;
+        }
+        .tableFixHead thead th { position: sticky; top: 0; z-index: 1; }
     </style>
 </head>
 <body>
@@ -29,34 +35,27 @@
                     </div>
                     <div class="col-6">
                         <label><b>Action 1</b></label>
-                        <select name="action_reader1" id="action_reader1" class="form-control action_list">
-                            <option value="">Please Select</option>
+                        <select name="action_reader1[]" id="action_reader1" class="form-control action_list" multiple>
+                            <option value="read">Read</option>
+                            <option value="write">Write</option>
+                            <option value="lock">Lock</option>
                         </select>
                     </div>
                 </div>
                 <br>
                 <div class="row">
-                    <div class="col-12">
-                        <div class="table-responsive">
-                            <table style="width: 100%;"  class="table">
-                                <thead class="thead-dark">
-                                    <tr>
-                                        <th>No</th>
-                                        <th>Tag</th>
-                                        <th>Serial</th>
-                                        <th>Status</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <!-- <tr>
-                                        <td>1</td>
-                                        <td>2</td>
-                                        <td>2</td>
-                                        <td>4</td>
-                                    </tr> -->
-                                </tbody>
-                            </table>
-                        </div>
+                    <div class="col-12 table-wrap tableFixHead">
+                        <table class="table table-sm" style="width: 100%;">
+                            <thead class="thead-dark">
+                                <tr>
+                                    <th>No</th>
+                                    <th>Tag</th>
+                                    <th>Serial</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody id="table1"></tbody>
+                        </table>
                     </div>
                 </div>
             </div>
@@ -70,34 +69,27 @@
                     </div>
                     <div class="col-6">
                         <label><b>Action 2</b></label>
-                        <select name="action_reader2" id="action_reader2" class="form-control action_list">
-                            <option value="">Please Select</option>
+                        <select name="action_reader2[]" id="action_reader2" class="form-control action_list" multiple>
+                            <option value="read">Read</option>
+                            <option value="write">Write</option>
+                            <option value="lock">Lock</option>
                         </select>
                     </div>
                 </div>
                 <br>
                 <div class="row">
-                    <div class="col-12">
-                        <div class="table-responsive">
-                            <table style="width: 100%;"  class="table">
-                                <thead class="thead-dark">
-                                    <tr>
-                                        <th>No</th>
-                                        <th>Tag</th>
-                                        <th>Serial</th>
-                                        <th>Status</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <!-- <tr>
-                                        <td>1</td>
-                                        <td>2</td>
-                                        <td>2</td>
-                                        <td>4</td>
-                                    </tr> -->
-                                </tbody>
-                            </table>
-                        </div>
+                    <div class="col-12 table-wrap tableFixHead">
+                        <table class="table table-sm" style="width: 100%;">
+                            <thead class="thead-dark">
+                                <tr>
+                                    <th>No</th>
+                                    <th>Tag</th>
+                                    <th>Serial</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody id="table2"></tbody>
+                        </table>
                     </div>
                 </div>
             </div>
@@ -113,40 +105,50 @@
                     </div>
                     <div class="col-6">
                         <label><b>Action 3</b></label>
-                        <select name="action_reader3" id="action_reader3" class="form-control action_list">
-                            <option value="">Please Select</option>
+                        <select name="action_reader3[]" id="action_reader3" class="form-control action_list" multiple>
+                            <option value="read">Read</option>
+                            <option value="write">Write</option>
+                            <option value="lock">Lock</option>
                         </select>
                     </div>
                 </div>
                 <br>
                 <div class="row">
-                    <div class="col-12">
-                        <div class="table-responsive">
-                            <table style="width: 100%;"  class="table">
-                                <thead class="thead-dark">
-                                    <tr>
-                                        <th>No</th>
-                                        <th>Tag</th>
-                                        <th>Serial</th>
-                                        <th>Status</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <!-- <tr>
-                                        <td>1</td>
-                                        <td>2</td>
-                                        <td>2</td>
-                                        <td>4</td>
-                                    </tr> -->
-                                </tbody>
-                            </table>
-                        </div>
+                    <div class="col-12 table-wrap tableFixHead">
+                        <table class="table table-sm" style="width: 100%;">
+                            <thead class="thead-dark">
+                                <tr>
+                                    <th>No</th>
+                                    <th>Tag</th>
+                                    <th>Serial</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody id="table3"></tbody>
+                        </table>
                     </div>
                 </div>
             </div>
             <div class="col-6" style="width: 100%; border: solid black 1px;">
-                <div class="row" style="padding:5px;">
-                    <label><b>Action Panel</b></label>
+                <div class="row" style="padding-top:5px; padding-left:5px;">
+                    <div class="col-12">
+                        <label><b>Action Panel</b></label>
+                    </div>
+                </div>
+                <div class="row" style="padding-left:5px;">
+                    <div class="col-6" style="border-right: 1px solid black;">
+                        PLC Status: <span id="plc_status" style="color: red;">Connecting...</span>
+                        <br>
+                        PLC Data: <span id="plc_data" style="color: red;">...</span>
+                        <hr>
+                        <div class="row">
+                            <div class="col-12">
+                                <label>Write to PLC</label>
+                                <input type="text" class="form-control" id="writeToPLC" placeholder="Data">
+                                <button type="button" id="submitPlc"  style="margin-top: 5px; width: 100%;" class="btn btn-primary">Write</button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -164,10 +166,15 @@
 
 <script src="../src/assets/jquery/jquery-3.6.0.min.js"></script>
 <script src="../src/assets/bootstrap/js/bootstrap.bundle.js"></script>
+<script src="../src/assets/select2/js/bootstrap-select.min.js"></script>
 <script>
     let { app, remote, BrowserWindow, dialog } = require("electron");
     
-    
+    $(document).ready(function() {
+        $('#action_reader1').selectpicker();
+        $('#action_reader2').selectpicker();
+        $('#action_reader3').selectpicker();
+    });
 </script>
 <script>
     if (window.module) module = window.module;

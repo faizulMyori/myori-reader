@@ -2,6 +2,8 @@ const { app, BrowserWindow, Menu, webContents  } = require('electron')
 const path = require('path')
 const env ='development'; 
 
+if (require('electron-squirrel-startup')) app.quit();
+
 if (env === 'development') { 
   try { 
     require('electron-reloader')(module, { 
@@ -13,9 +15,10 @@ if (env === 'development') {
 
 function createWindow () {
   const win = new BrowserWindow({
-    width: 1200,
+    width: 1000,
     height: 550,
     icon: path.join(__dirname, '/assets/img/icons/win/icon.ico'),
+    resizable: false,
     webPreferences: {
       nodeIntegration: true,
       contextIsolation: false,
@@ -23,14 +26,14 @@ function createWindow () {
     }
   })
 
-  const isMac = process.platform === 'darwin'
+  // const isMac = process.platform === 'darwin'
 
-  const template = [
+  // const template = [
     
-  ]
+  // ]
 
-  const menu = Menu.buildFromTemplate(template)
-  Menu.setApplicationMenu(menu)
+  // const menu = Menu.buildFromTemplate(template)
+  // Menu.setApplicationMenu(menu)
 
 
   win.loadFile(path.join(__dirname, 'index.html'))
