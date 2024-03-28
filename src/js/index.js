@@ -4,7 +4,7 @@ let { app, remote, BrowserWindow, dialog } = require("electron");
 const net = require('net');
 const client = new net.Socket();
 var isPLCConnected = false;
-var s1PLCData = null;
+var s1PLCData = false;
 
 client.on('data', (data) => {
   console.log('Received: ' + data);
@@ -19,16 +19,12 @@ client.on('data', (data) => {
 client.on('close', () => {
   isPLCConnected = false;
   document.getElementById('plc_status').innerHTML = 'Connecting...';
-  removeListeners();
-  setTimeout(startServer(), 3000);
 });
 
 client.on('error', (err) => {
   console.log(err);
   isPLCConnected = false;
   document.getElementById('plc_status').innerHTML = 'Connecting...';
-  removeListeners();
-  setTimeout(startServer(), 3000);
 });
 
 const startServer = () => {
@@ -50,7 +46,7 @@ const removeListeners = () => {
 startServer();
 
 document.getElementById('submitPlc').addEventListener('click', () => {
-  sendData(document.getElementById('plc_data').value);
+  sendData(document.getElementById('writeToPLC').value);
 })
 
 // NFC Function
@@ -92,7 +88,7 @@ document.getElementById('nfc_reader1').addEventListener('change', () => {
     reader.on('card', async card => {
         const tag = card.uid;
         countNFC = countNFC + 1;
-        if (selectedAction1.find(s => s === 'read')) {
+        if (selectedAction1.find(s => s === 'read') && s1PLCData) {
           const data = await read(reader)
           console.log(countNFC)
           if (data) {
@@ -102,7 +98,7 @@ document.getElementById('nfc_reader1').addEventListener('change', () => {
               "data": data,
               "status": "OK",
             }, "table1")
-            // sendData("s1_ok")
+            sendData("s1_ok")
           } else {
             insertToTable({
               "no": countNFC,
@@ -110,8 +106,10 @@ document.getElementById('nfc_reader1').addEventListener('change', () => {
               "data": data,
               "status": "ERR",
             }, "table1")
-            // sendData("s1_ng")
+            sendData("s1_ng")
           }
+
+          s1PLCData = false
         }
 
         // if (selectedAction1.find(s => s === 'write')) {
@@ -132,6 +130,8 @@ document.getElementById('action_reader2').addEventListener('change', () => {
   selectedAction2 = $("#action_reader2").selectpicker('val');
 })
 
+var item6 = [];
+var excelData = [];
 document.getElementById('nfc_reader2').addEventListener('change', () => {
     var selectedDevice = document.getElementById('nfc_reader2').value;
     if (selectedDevice !== '') {
@@ -144,7 +144,10 @@ document.getElementById('nfc_reader2').addEventListener('change', () => {
         countNFC = countNFC + 1;
         if (selectedAction2.find(s => s === 'read')) {
           const data = await read(reader)
-
+          item6.push({
+            "uid": tag,
+            "data": data,
+          });
           if (data) {
             insertToTable({
               "no": countNFC,
@@ -153,10 +156,19 @@ document.getElementById('nfc_reader2').addEventListener('change', () => {
               "status": "OK",
             }, "table2")
             
-            // if ((countNFC) === 6) {
-            //   sendData("s2_btjd_off")
-            //   setTimeout(sendData("s2_btjd_on"), 10000);
-            // }
+            if (item6.length === 5) {
+              sendData("s2_btjd_off")
+              setTimeout(sendData("s2_btjd_on"), 10000);
+              
+              excelData.push({
+                child: item6,
+                parent: {
+                  "uid": "",
+                  "data": "",
+                }
+              })
+              item6 = [];
+            }
           } else {
             insertToTable({
               "no": countNFC,
@@ -202,6 +214,10 @@ document.getElementById('nfc_reader3').addEventListener('change', () => {
             "data": data,
             "status": "OK",
           }, "table3")
+          excelData[excelData.length - 1].parent = {
+            "uid": tag,
+            "data": data,
+          }
         } else {
           insertToTable({
             "no": countNFC,
@@ -224,6 +240,157 @@ document.getElementById('nfc_reader3').addEventListener('change', () => {
     remote.getCurrentWindow().reload()
   }
 })
+
+document.getElementById('downloadExcel').addEventListener('click', () => {
+  let data = [{
+    child: [{
+      "uid": "1",
+      "data": "11",
+    },
+    {
+      "uid": "2",
+      "data": "21",
+    },
+    {
+      "uid": "3",
+      "data": "31",
+    },
+    {
+      "uid": "4",
+      "data": "41",
+    },
+    {
+      "uid": "5",
+      "data": "51",
+    },
+    {
+      "uid": "6",
+      "data": "61",
+    }],
+    parent: {
+      "uid": "1",
+      "data": "11",
+    }
+  },
+  {
+    child: [{
+      "uid": "1",
+      "data": "12",
+    },
+    {
+      "uid": "2",
+      "data": "22",
+    },
+    {
+      "uid": "3",
+      "data": "32",
+    },
+    {
+      "uid": "4",
+      "data": "42",
+    },
+    {
+      "uid": "5",
+      "data": "52",
+    },
+    {
+      "uid": "6",
+      "data": "62",
+    }],
+    parent: {
+      "uid": "2",
+      "data": "22",
+    }
+  }];
+
+  const excelHeader = [
+    "Children UID",
+    "Children Data",
+    "Parent UID",
+    "Parent Data",
+  ]
+
+  var combinedData = [];
+
+  data.forEach(e => {
+    var child = e.child;
+    var parent = e.parent;
+
+    child.forEach(c => {
+      combinedData.push({
+        "Children UID": c.uid,
+        "Children Data": c.data,
+        "Parent UID": parent.uid,
+        "Parent Data": parent.data,
+      })
+    })
+  })
+
+  const XLSX = require('xlsx');
+
+  const worksheet = XLSX.utils.json_to_sheet(combinedData)
+
+  const workbook = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(workbook, worksheet, "Petronas");
+
+  XLSX.utils.sheet_add_aoa(worksheet, [excelHeader], { origin: "A1" });
+
+  let wscols = []
+  excelHeader.map(arr => {
+    wscols.push({ wch: arr.length + 5 })
+  })
+  worksheet["!cols"] = wscols;
+
+  XLSX.writeFile(workbook, "Petronas NFC Lists.xlsx", { compression: true });
+})
+
+function getDataFromTable() {
+  var table1 = document.getElementById('table1');
+  var table2 = document.getElementById('table2');
+  var table3 = document.getElementById('table3');
+
+  var rowLength1 = table1.rows.length;
+  var table1Data = [];
+  for (let i = 0; i < rowLength1; i++){
+    var oCells = table1.rows.item(i).cells;
+    table1Data.push({
+      "no": oCells.item(0).innerHTML,
+      "uid": oCells.item(1).innerHTML,
+      "data": oCells.item(2).innerHTML,
+      "status": oCells.item(3).innerHTML,
+    });
+  }
+
+  var rowLength2 = table2.rows.length;
+  var table2Data = [];
+  for (let i = 0; i < rowLength2; i++){
+    var oCells = table2.rows.item(i).cells;
+    table2Data.push({
+      "no": oCells.item(0).innerHTML,
+      "uid": oCells.item(1).innerHTML,
+      "data": oCells.item(2).innerHTML,
+      "status": oCells.item(3).innerHTML,
+    });
+  }
+
+  var rowLength3 = table3.rows.length;
+  var table3Data = [];
+  for (let i = 0; i < rowLength3; i++){
+    var oCells = table3.rows.item(i).cells;
+    table3Data.push({
+      "no": oCells.item(0).innerHTML,
+      "uid": oCells.item(1).innerHTML,
+      "data": oCells.item(2).innerHTML,
+      "status": oCells.item(3).innerHTML,
+    });
+  }
+
+  return {
+    "table1": table1Data,
+    "table2": table2Data,
+    "table3": table3Data,
+  }
+}
 
 function insertToTable(data, tableID){
   var table = document.getElementById(tableID);
