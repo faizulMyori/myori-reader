@@ -242,66 +242,7 @@ document.getElementById('nfc_reader3').addEventListener('change', () => {
 })
 
 document.getElementById('downloadExcel').addEventListener('click', () => {
-  let data = [{
-    child: [{
-      "uid": "1",
-      "data": "11",
-    },
-    {
-      "uid": "2",
-      "data": "21",
-    },
-    {
-      "uid": "3",
-      "data": "31",
-    },
-    {
-      "uid": "4",
-      "data": "41",
-    },
-    {
-      "uid": "5",
-      "data": "51",
-    },
-    {
-      "uid": "6",
-      "data": "61",
-    }],
-    parent: {
-      "uid": "1",
-      "data": "11",
-    }
-  },
-  {
-    child: [{
-      "uid": "1",
-      "data": "12",
-    },
-    {
-      "uid": "2",
-      "data": "22",
-    },
-    {
-      "uid": "3",
-      "data": "32",
-    },
-    {
-      "uid": "4",
-      "data": "42",
-    },
-    {
-      "uid": "5",
-      "data": "52",
-    },
-    {
-      "uid": "6",
-      "data": "62",
-    }],
-    parent: {
-      "uid": "2",
-      "data": "22",
-    }
-  }];
+  let data = excelData;
 
   const excelHeader = [
     "Children UID",
