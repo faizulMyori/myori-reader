@@ -1,4 +1,5 @@
-let { app, remote, BrowserWindow, dialog } = require("electron");
+let { remote } = require("electron");
+import { read } from './utils/myori-reader.js';
 
 // PLC Function
 const net = require('net');
@@ -39,10 +40,6 @@ const sendData = (message) => {
   client.write(message);
 };
 
-const removeListeners = () => {
-  client.removeListener('connect')
-}
-
 startServer();
 
 document.getElementById('submitPlc').addEventListener('click', () => {
@@ -76,7 +73,6 @@ nfc.on('reader', reader => {
 var selectedAction1 = '';
 document.getElementById('action_reader1').addEventListener('change', () => {
   selectedAction1 = $("#action_reader1").selectpicker('val');
-  console.log(selectedAction1)
 })
 
 document.getElementById('nfc_reader1').addEventListener('change', () => {
@@ -147,6 +143,7 @@ document.getElementById('nfc_reader2').addEventListener('change', () => {
           item6.push({
             "uid": tag,
             "data": data,
+            "type": "child"
           });
           if (data) {
             insertToTable({
@@ -165,6 +162,7 @@ document.getElementById('nfc_reader2').addEventListener('change', () => {
                 parent: {
                   "uid": "",
                   "data": "",
+                  "type": "parent"
                 }
               })
               item6 = [];
@@ -217,6 +215,7 @@ document.getElementById('nfc_reader3').addEventListener('change', () => {
           excelData[excelData.length - 1].parent = {
             "uid": tag,
             "data": data,
+            "type": "parent"
           }
         } else {
           insertToTable({
@@ -242,34 +241,17 @@ document.getElementById('nfc_reader3').addEventListener('change', () => {
 })
 
 document.getElementById('downloadExcel').addEventListener('click', () => {
-  let data = excelData;
+  let data = processData(excelData)
 
   const excelHeader = [
-    "Children UID",
-    "Children Data",
-    "Parent UID",
-    "Parent Data",
+    "UID",
+    "Data",
+    "Type",
   ]
-
-  var combinedData = [];
-
-  data.forEach(e => {
-    var child = e.child;
-    var parent = e.parent;
-
-    child.forEach(c => {
-      combinedData.push({
-        "Children UID": c.uid,
-        "Children Data": c.data,
-        "Parent UID": parent.uid,
-        "Parent Data": parent.data,
-      })
-    })
-  })
 
   const XLSX = require('xlsx');
 
-  const worksheet = XLSX.utils.json_to_sheet(combinedData)
+  const worksheet = XLSX.utils.json_to_sheet(data)
 
   const workbook = XLSX.utils.book_new();
   XLSX.utils.book_append_sheet(workbook, worksheet, "Petronas");
@@ -282,55 +264,20 @@ document.getElementById('downloadExcel').addEventListener('click', () => {
   })
   worksheet["!cols"] = wscols;
 
-  XLSX.writeFile(workbook, "Petronas NFC Lists.xlsx", { compression: true });
+  XLSX.writeFile(workbook, remote.app.getPath("downloads") + "/Petronas NFC Lists.xlsx", { compression: true });
 })
 
-function getDataFromTable() {
-  var table1 = document.getElementById('table1');
-  var table2 = document.getElementById('table2');
-  var table3 = document.getElementById('table3');
+function processData(data) {
+  var combinedData = [];
+  
+  data.map(arr => {
+    arr.child.map(arr2 => {
+      combinedData.push(arr2)
+    })
+    combinedData.push(arr.parent)
+  })
 
-  var rowLength1 = table1.rows.length;
-  var table1Data = [];
-  for (let i = 0; i < rowLength1; i++){
-    var oCells = table1.rows.item(i).cells;
-    table1Data.push({
-      "no": oCells.item(0).innerHTML,
-      "uid": oCells.item(1).innerHTML,
-      "data": oCells.item(2).innerHTML,
-      "status": oCells.item(3).innerHTML,
-    });
-  }
-
-  var rowLength2 = table2.rows.length;
-  var table2Data = [];
-  for (let i = 0; i < rowLength2; i++){
-    var oCells = table2.rows.item(i).cells;
-    table2Data.push({
-      "no": oCells.item(0).innerHTML,
-      "uid": oCells.item(1).innerHTML,
-      "data": oCells.item(2).innerHTML,
-      "status": oCells.item(3).innerHTML,
-    });
-  }
-
-  var rowLength3 = table3.rows.length;
-  var table3Data = [];
-  for (let i = 0; i < rowLength3; i++){
-    var oCells = table3.rows.item(i).cells;
-    table3Data.push({
-      "no": oCells.item(0).innerHTML,
-      "uid": oCells.item(1).innerHTML,
-      "data": oCells.item(2).innerHTML,
-      "status": oCells.item(3).innerHTML,
-    });
-  }
-
-  return {
-    "table1": table1Data,
-    "table2": table2Data,
-    "table3": table3Data,
-  }
+  return combinedData;
 }
 
 function insertToTable(data, tableID){
@@ -347,66 +294,4 @@ function insertToTable(data, tableID){
   cell2.innerHTML = data.uid;
   cell3.innerHTML = data.data;
   cell4.innerHTML = data.status;
-}
-
-async function read(reader) {
-  try {
-    const cardHeader = await reader.read(0, 20);
-    const tag = nfcCard.parseInfo(cardHeader);
-    if(nfcCard.isFormatedAsNDEF() && nfcCard.hasReadPermissions() && nfcCard.hasNDEFMessage()) {
-      const NDEFRawMessage = await reader.read(4, nfcCard.getNDEFMessageLengthToRead());
-      const NDEFMessage = nfcCard.parseNDEF(NDEFRawMessage);
-      if (NDEFMessage[0].type == 'uri') {
-       return NDEFMessage[0].uri;
-      } else if (NDEFMessage[0].type == 'text') {
-        return NDEFMessage[0].text;
-      }
-    } else {
-      return null
-    }
-  } catch (err) {
-    return null
-  }
-   
-}
-
-async function write(reader, nfcText) {
-  try {
-    const cardHeader = await reader.read(0, 20);
-    const tag = nfcCard.parseInfo(cardHeader);
-
-    var message = '';
-
-    message = [
-      { type: 'text', text: nfcText, language: 'en' }
-    ];
-    
-    const rawDataToWrite = nfcCard.prepareBytesToWrite(message);
-    const preparationWrite = await reader.write(4, rawDataToWrite.preparedData);
-
-    if (preparationWrite) {
-      return true
-    } else {
-      return false
-    }
-  } catch (err) {
-    return false
-  }
-}
-
-async function lock(reader) {
-    try {
-      const data = Buffer.from([0xFF, 0xFF, 0xFF, 0xFF]); // lock all pages
-      await reader.write(2, data, 4);
-
-      const data2 = Buffer.from([0xFF, 0xFF, 0x00, 0x00]); // lock all pages
-      await reader.write(40, data2, 4);
-
-      const data3 = Buffer.from([0xFF, 0xFF, 0x00, 0x00]); // limit the count so no write access granted
-      await reader.write(41, data3, 4);
-
-      return true
-    } catch (err) {
-      return null;
-    }
 }
