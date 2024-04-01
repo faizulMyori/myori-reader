@@ -51,6 +51,7 @@ const { NFC } = require('nfc-pcsc');
 const nfc = new NFC();
 const nfcCard = require('nfccard-tool');
 var readerOpt = [];
+var excelData = [];
 
 nfc.on('reader', reader => {
     readerOpt.push(reader);
@@ -70,11 +71,6 @@ nfc.on('reader', reader => {
 	});
 });
 
-var selectedAction1 = '';
-document.getElementById('action_reader1').addEventListener('change', () => {
-  selectedAction1 = $("#action_reader1").selectpicker('val');
-})
-
 document.getElementById('nfc_reader1').addEventListener('change', () => {
   var selectedDevice = document.getElementById('nfc_reader1').value;
   if (selectedDevice !== '') {
@@ -84,50 +80,30 @@ document.getElementById('nfc_reader1').addEventListener('change', () => {
     reader.on('card', async card => {
         const tag = card.uid;
         countNFC = countNFC + 1;
-        if (selectedAction1.find(s => s === 'read') && s1PLCData) {
-          const data = await read(reader)
-          console.log(countNFC)
-          if (data) {
-            insertToTable({
-              "no": countNFC,
-              "uid": tag,
-              "data": data,
-              "status": "OK",
-            }, "table1")
-            sendData("s1_ok")
-          } else {
-            insertToTable({
-              "no": countNFC,
-              "uid": tag,
-              "data": data,
-              "status": "ERR",
-            }, "table1")
-            sendData("s1_ng")
-          }
 
-          s1PLCData = false
+        const data = await write(reader, "123")
+
+        if (data) {
+          insertToTable({
+            "no": countNFC,
+            "uid": tag,
+            "data": data,
+            "status": "OK",
+          }, "table1")
+        } else {
+          insertToTable({
+            "no": countNFC,
+            "uid": tag,
+            "data": data,
+            "status": "ERR",
+          }, "table1")
         }
-
-        // if (selectedAction1.find(s => s === 'write')) {
-        //   const data = await write(reader, "123")
-        // }
-
-        // if (selectedAction1.find(s => s === 'lock')) {
-        //   const data = await lock(reader)
-        // }
     });
   } else {
     remote.getCurrentWindow().reload()
   }
 })
 
-var selectedAction2 = '';
-document.getElementById('action_reader2').addEventListener('change', () => {
-  selectedAction2 = $("#action_reader2").selectpicker('val');
-})
-
-var item6 = [];
-var excelData = [];
 document.getElementById('nfc_reader2').addEventListener('change', () => {
     var selectedDevice = document.getElementById('nfc_reader2').value;
     if (selectedDevice !== '') {
@@ -138,53 +114,23 @@ document.getElementById('nfc_reader2').addEventListener('change', () => {
       reader.on('card', async card => {
         const tag = card.uid;
         countNFC = countNFC + 1;
-        if (selectedAction2.find(s => s === 'read')) {
-          const data = await read(reader)
-          item6.push({
+        const data = await read(reader)
+
+        if (data) {
+          insertToTable({
+            "no": countNFC,
             "uid": tag,
             "data": data,
-            "type": "child"
-          });
-          if (data) {
-            insertToTable({
-              "no": countNFC,
-              "uid": tag,
-              "data": data,
-              "status": "OK",
-            }, "table2")
-            
-            if (item6.length === 5) {
-              sendData("s2_btjd_off")
-              setTimeout(sendData("s2_btjd_on"), 10000);
-              
-              excelData.push({
-                child: item6,
-                parent: {
-                  "uid": "",
-                  "data": "",
-                  "type": "parent"
-                }
-              })
-              item6 = [];
-            }
-          } else {
-            insertToTable({
-              "no": countNFC,
-              "uid": tag,
-              "data": data,
-              "status": "ERR",
-            }, "table2")
-            // sendData(s1_ng)
-          }
+            "status": "OK",
+          }, "table2")
+        } else {
+          insertToTable({
+            "no": countNFC,
+            "uid": tag,
+            "data": data,
+            "status": "ERR",
+          }, "table2")
         }
-
-        // if (selectedAction2.find(s => s === 'write')) {
-        //   const data = await write(reader, "123")
-        // }
-
-        // if (selectedAction2.find(s => s === 'lock')) {
-        //   const data = await lock(reader)
-        // }
       });
     } else {
       remote.getCurrentWindow().reload()
@@ -202,38 +148,56 @@ document.getElementById('nfc_reader3').addEventListener('change', () => {
       const tag = card.uid;
       countNFC = countNFC + 1;
 
-      if (selectedAction2.find(s => s === 'read')) {
-        const data = await read(reader)
-
-        if (data) {
-          insertToTable({
-            "no": countNFC,
-            "uid": tag,
-            "data": data,
-            "status": "OK",
-          }, "table3")
-          excelData[excelData.length - 1].parent = {
-            "uid": tag,
-            "data": data,
-            "type": "parent"
-          }
-        } else {
-          insertToTable({
-            "no": countNFC,
-            "uid": tag,
-            "data": data,
-            "status": "ERR",
-          }, "table3")
-        }
+      const data = await lock(reader)
+      
+      if (data) {
+        insertToTable({
+          "no": countNFC,
+          "uid": tag,
+          "data": data,
+          "status": "OK",
+        }, "table3")
+      } else {
+        insertToTable({
+          "no": countNFC,
+          "uid": tag,
+          "data": data,
+          "status": "ERR",
+        }, "table3")
       }
+    });
+  } else {
+    remote.getCurrentWindow().reload()
+  }
+})
 
-      // if (selectedAction2.find(s => s === 'write')) {
-      //   const data = await write(reader, "123")
-      // }
+document.getElementById('nfc_reader4').addEventListener('change', () => {
+  var selectedDevice = document.getElementById('nfc_reader4').value;
+  if (selectedDevice !== '') {
+    var reader = readerOpt.find(e => e.name == selectedDevice);
+    reader.aid = 'F222222222';
+    var countNFC = 0;
 
-      // if (selectedAction2.find(s => s === 'lock')) {
-      //   const data = await lock(reader)
-      // }
+    reader.on('card', async card => {
+      const tag = card.uid;
+      countNFC = countNFC + 1;
+
+      const data = await lock(reader)
+      if (data) {
+        insertToTable({
+          "no": countNFC,
+          "uid": tag,
+          "data": data,
+          "status": "OK",
+        }, "table4")
+      } else {
+        insertToTable({
+          "no": countNFC,
+          "uid": tag,
+          "data": data,
+          "status": "ERR",
+        }, "table4")
+      }
     });
   } else {
     remote.getCurrentWindow().reload()

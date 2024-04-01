@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>MyOri NFC Reader (Petronas)</title>
+    <title>MyOri NFC Reader</title>
     <meta http-equiv="Content-Security-Policy"/>
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="../src/assets/bootstrap/css/bootstrap.min.css" />
@@ -16,127 +16,188 @@
             height: 100%;
         }
         .table-wrap {
-            height: 120px;
+            height: 350px;
             overflow-y: auto;
         }
         .tableFixHead thead th { position: sticky; top: 0; z-index: 1; }
+        .container {
+            width: 100% !important;
+        }
     </style>
 </head>
 <body>
-    <div class="container" style="height: 100%; padding-top:5px; padding-bottom:5px;">
-        <div class="row" style="height: 50%;">
-            <div class="col-6" style="width: 100%; border: solid black 1px;">
-                <div class="row">
-                    <div class="col-6">
-                        <label><b>NFC Reader 1</b></label>
-                        <select name="nfc_reader1"  id="nfc_reader1" class="form-control nfc_list">
-                            <option value="">Please Select</option>
-                        </select>
+    <div class="container-fluid" style="height: 100%; width: 100%;">
+        <div class="row" style="height: 100%;">
+            <div class="col-8">
+                <div class="row" style="height: 50%;">
+                    <div class="col-6" style="width: 100%; border: solid black 1px;">
+                        <div class="row">
+                            <div class="col-6">
+                                <label><b>NFC Writer</b></label>
+                                <select name="nfc_reader1"  id="nfc_reader1" class="form-control nfc_list">
+                                    <option value="">Please Select</option>
+                                </select>
+                            </div>
+                            <!-- <div class="col-6">
+                                <label><b>Action 1</b></label>
+                                <select name="action_reader1[]" id="action_reader1" class="form-control action_list" multiple>
+                                    <option value="write">Write</option>
+                                </select>
+                            </div> -->
+                        </div>
+                        <br>
+                        <div class="row">
+                            <div class="col-12 table-wrap tableFixHead">
+                                <table class="table table-sm" style="width: 100%;">
+                                    <thead class="thead-dark">
+                                        <tr>
+                                            <th>No</th>
+                                            <th>Tag</th>
+                                            <th>Serial</th>
+                                            <th>Status</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="table1"></tbody>
+                                </table>
+                            </div>
+                        </div>
                     </div>
-                    <div class="col-6">
-                        <label><b>Action 1</b></label>
-                        <select name="action_reader1[]" id="action_reader1" class="form-control action_list" multiple>
-                            <option value="read">Read</option>
-                            <option value="write">Write</option>
-                            <option value="lock">Lock</option>
-                        </select>
+                    <div class="col-6" style="width: 100%; border: solid black 1px;">
+                        <div class="row">
+                            <div class="col-6">
+                                <label><b>NFC Reader</b></label>
+                                <select name="nfc_reader2"  id="nfc_reader2" class="form-control nfc_list">
+                                    <option value="">Please Select</option>
+                                </select>
+                            </div>
+                            <!-- <div class="col-6">
+                                <label><b>Action 2</b></label>
+                                <select name="action_reader2[]" id="action_reader2" class="form-control action_list" multiple>
+                                    <option value="read">Read</option>
+                                </select>
+                            </div> -->
+                        </div>
+                        <br>
+                        <div class="row">
+                            <div class="col-12 table-wrap tableFixHead">
+                                <table class="table table-sm" style="width: 100%;">
+                                    <thead class="thead-dark">
+                                        <tr>
+                                            <th>No</th>
+                                            <th>Tag</th>
+                                            <th>Serial</th>
+                                            <th>Status</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="table2"></tbody>
+                                </table>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                <br>
-                <div class="row">
-                    <div class="col-12 table-wrap tableFixHead">
-                        <table class="table table-sm" style="width: 100%;">
-                            <thead class="thead-dark">
-                                <tr>
-                                    <th>No</th>
-                                    <th>Tag</th>
-                                    <th>Serial</th>
-                                    <th>Status</th>
-                                </tr>
-                            </thead>
-                            <tbody id="table1"></tbody>
-                        </table>
+                <div class="row" style="height: 50%;">
+                    <div class="col-6" style="width: 100%; border: solid black 1px;">
+                        <div class="row">
+                            <div class="col-6">
+                                <label><b>NFC Locker 1</b></label>
+                                <select name="nfc_reader3"  id="nfc_reader3" class="form-control nfc_list">
+                                    <option value="">Please Select</option>
+                                </select>
+                            </div>
+                            <!-- <div class="col-6">
+                                <label><b>Action 3</b></label>
+                                <select name="action_reader3[]" id="action_reader3" class="form-control action_list" multiple>
+                                    <option value="lock">Lock</option>
+                                </select>
+                            </div> -->
+                        </div>
+                        <br>
+                        <div class="row">
+                            <div class="col-12 table-wrap tableFixHead">
+                                <table class="table table-sm" style="width: 100%;">
+                                    <thead class="thead-dark">
+                                        <tr>
+                                            <th>No</th>
+                                            <th>Tag</th>
+                                            <th>Serial</th>
+                                            <th>Status</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="table3"></tbody>
+                                </table>
+                            </div>
+                        </div>
                     </div>
+                    <div class="col-6" style="width: 100%; border: solid black 1px;">
+                        <div class="row">
+                            <div class="col-6">
+                                <label><b>NFC Locker 2</b></label>
+                                <select name="nfc_reader4"  id="nfc_reader4" class="form-control nfc_list">
+                                    <option value="">Please Select</option>
+                                </select>
+                            </div>
+                            <!-- <div class="col-6">
+                                <label><b>Action 4</b></label>
+                                <select name="action_reader4[]" id="action_reader4" class="form-control action_list" multiple>
+                                    <option value="lock">Lock</option>
+                                </select>
+                            </div> -->
+                        </div>
+                        <br>
+                        <div class="row">
+                            <div class="col-12 table-wrap tableFixHead">
+                                <table class="table table-sm" style="width: 100%;">
+                                    <thead class="thead-dark">
+                                        <tr>
+                                            <th>No</th>
+                                            <th>Tag</th>
+                                            <th>Serial</th>
+                                            <th>Status</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="table4"></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- <div class="col-6" style="width: 100%; border: solid black 1px;">
+                        <div class="row" style="padding-top:5px; padding-left:5px;">
+                            <div class="col-12">
+                                <label><b>Action Panel</b></label>
+                            </div>
+                        </div>
+                        <div class="row" style="padding-left:5px;">
+                            <div class="col-6" style="border-right: 1px solid black;">
+                                PLC Status: <span id="plc_status" style="color: red;">Connecting...</span>
+                                <br>
+                                PLC Data: <span id="plc_data" style="color: red;">...</span>
+                                <hr>
+                                <div class="row">
+                                    <div class="col-12">
+                                        <label>Write to PLC</label>
+                                        <input type="text" class="form-control" id="writeToPLC" placeholder="Data">
+                                        <button type="button" id="submitPlc"  style="margin-top: 5px; width: 100%;" class="btn btn-primary">Write</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="row">
+                                    <div class="col-12">
+                                        <label>MyOri Actions</label>
+                                        <button type="button" id="uploadToServer" style="width: 100%;" class="btn btn-primary">Upload To Server</button>
+                                        <button type="button" id="downloadExcel" style="margin-top: 5px; width: 100%;" class="btn btn-secondary">Download Excel</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div> -->
                 </div>
             </div>
-            <div class="col-6" style="width: 100%; border: solid black 1px;">
+            <div class="col-4" style="height: 100%;">
                 <div class="row">
-                    <div class="col-6">
-                        <label><b>NFC Reader 2</b></label>
-                        <select name="nfc_reader2"  id="nfc_reader2" class="form-control nfc_list">
-                            <option value="">Please Select</option>
-                        </select>
-                    </div>
-                    <div class="col-6">
-                        <label><b>Action 2</b></label>
-                        <select name="action_reader2[]" id="action_reader2" class="form-control action_list" multiple>
-                            <option value="read">Read</option>
-                            <option value="write">Write</option>
-                            <option value="lock">Lock</option>
-                        </select>
-                    </div>
-                </div>
-                <br>
-                <div class="row">
-                    <div class="col-12 table-wrap tableFixHead">
-                        <table class="table table-sm" style="width: 100%;">
-                            <thead class="thead-dark">
-                                <tr>
-                                    <th>No</th>
-                                    <th>Tag</th>
-                                    <th>Serial</th>
-                                    <th>Status</th>
-                                </tr>
-                            </thead>
-                            <tbody id="table2"></tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="row" style="height: 50%;">
-            <div class="col-6" style="width: 100%; border: solid black 1px;">
-                <div class="row">
-                    <div class="col-6">
-                        <label><b>NFC Reader 3</b></label>
-                        <select name="nfc_reader3"  id="nfc_reader3" class="form-control nfc_list">
-                            <option value="">Please Select</option>
-                        </select>
-                    </div>
-                    <div class="col-6">
-                        <label><b>Action 3</b></label>
-                        <select name="action_reader3[]" id="action_reader3" class="form-control action_list" multiple>
-                            <option value="read">Read</option>
-                            <option value="write">Write</option>
-                            <option value="lock">Lock</option>
-                        </select>
-                    </div>
-                </div>
-                <br>
-                <div class="row">
-                    <div class="col-12 table-wrap tableFixHead">
-                        <table class="table table-sm" style="width: 100%;">
-                            <thead class="thead-dark">
-                                <tr>
-                                    <th>No</th>
-                                    <th>Tag</th>
-                                    <th>Serial</th>
-                                    <th>Status</th>
-                                </tr>
-                            </thead>
-                            <tbody id="table3"></tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-            <div class="col-6" style="width: 100%; border: solid black 1px;">
-                <div class="row" style="padding-top:5px; padding-left:5px;">
-                    <div class="col-12">
-                        <label><b>Action Panel</b></label>
-                    </div>
-                </div>
-                <div class="row" style="padding-left:5px;">
-                    <div class="col-6" style="border-right: 1px solid black;">
+                    <div class="col-12" style="border-right: 1px solid black;">
+                        <label><b>PLC Actions</b></label>
+                        <br>
                         PLC Status: <span id="plc_status" style="color: red;">Connecting...</span>
                         <br>
                         PLC Data: <span id="plc_data" style="color: red;">...</span>
@@ -149,14 +210,30 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-6">
+                </div>
+                <hr>
+                <div class="row">
+                    <div class="col-12">
+                        <label><b>MyOri Actions</b></label>
                         <div class="row">
                             <div class="col-12">
-                                <label>MyOri Actions</label>
-                                <button type="button" id="uploadToServer" style="width: 100%;" class="btn btn-primary">Upload To Server</button>
-                                <button type="button" id="downloadExcel" style="margin-top: 5px; width: 100%;" class="btn btn-secondary">Download Excel</button>
+                                <label>Write initials</label>
+                                <input type="text" class="form-control" id="writeInitials" placeholder="MyOriSmartSecure" value="MyOriSmartSecure">
                             </div>
                         </div>
+                        <br><div class="row">
+                            <div class="col-6">
+                                <label>Write Start Number</label>
+                                <input type="number" class="form-control" id="writeStartNo" placeholder="0">
+                            </div>
+                            <div class="col-6">
+                                <label>Write Total</label>
+                                <input type="number" class="form-control" id="writeTotal" placeholder="0">
+                            </div>
+                        </div>
+                        <hr>
+                        <button type="button" id="uploadToServer" style="width: 100%;" class="btn btn-primary">Upload To Server</button>
+                        <button type="button" id="downloadExcel" style="margin-top: 5px; width: 100%;" class="btn btn-secondary">Download Excel</button>
                     </div>
                 </div>
             </div>
@@ -183,6 +260,7 @@
         $('#action_reader1').selectpicker();
         $('#action_reader2').selectpicker();
         $('#action_reader3').selectpicker();
+        $('#action_reader4').selectpicker();
     });
 </script>
 <script>

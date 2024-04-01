@@ -15,8 +15,8 @@ if (env === 'development') {
 
 function createWindow () {
   const win = new BrowserWindow({
-    width: 1000,
-    height: 550,
+    width: 1980,
+    height: 1080,
     icon: path.join(__dirname, '/assets/img/icons/win/icon.ico'),
     resizable: false,
     webPreferences: {
