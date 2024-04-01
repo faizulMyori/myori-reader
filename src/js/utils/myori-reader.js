@@ -18,15 +18,19 @@ export async function read(reader) {
   } catch (err) {
     return null
   }
-   
 }
 
-export async function write(reader, nfcText) {
+export async function write(reader, nfcText, nfcUID, encode=true) {
   try {
     const cardHeader = await reader.read(0, 20);
     const tag = nfcCard.parseInfo(cardHeader);
 
     var message = '';
+
+    if (encode) {
+      var encrypted = encode(nfcUID)
+      nfcText = nfcText + encrypted;
+    }
 
     message = [
       { type: 'text', text: nfcText, language: 'en' }
@@ -45,6 +49,24 @@ export async function write(reader, nfcText) {
   }
 }
 
+export async function encode(nfcUid) {
+  var Crypto = require("crypto");
+  var key = "0192380123687ff89719283798fe0cde";
+  var iv = key.slice(0, 16);
+  
+  function encryptText(cipher_alg, key, iv, text, encoding) {
+    var cipher = Crypto.createCipheriv(cipher_alg, key, iv);
+    encoding = encoding || "binary";
+    var result = cipher.update(text,'utf8',  encoding);
+    result += cipher.final(encoding);
+    return result;
+  }
+
+  var encrypted = encryptText('aes-256-cbc', key, iv, nfcUid, "base64");
+
+  return encrypted
+}
+
 export async function lock(reader) {
     try {
       const data = Buffer.from([0xFF, 0xFF, 0xFF, 0xFF]); // lock all pages
@@ -58,6 +80,6 @@ export async function lock(reader) {
 
       return true
     } catch (err) {
-      return null;
+      return false;
     }
 }

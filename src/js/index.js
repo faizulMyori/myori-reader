@@ -1,4 +1,5 @@
 let { remote } = require("electron");
+import { data } from 'jquery';
 import { read } from './utils/myori-reader.js';
 
 // PLC Function
@@ -71,25 +72,42 @@ nfc.on('reader', reader => {
 	});
 });
 
+var initials = document.getElementById('writeInitials').value;
+var writeStartNo = document.getElementById('writeStartNo').value;
+var writeTotal = document.getElementById('writeTotal').value;
+
+document.getElementById('setWriteData').addEventListener('click', () => {
+  initials = document.getElementById('writeInitials').value;
+  writeStartNo = document.getElementById('writeStartNo').value;
+  writeTotal = document.getElementById('writeTotal').value;
+})
+
 document.getElementById('nfc_reader1').addEventListener('change', () => {
   var selectedDevice = document.getElementById('nfc_reader1').value;
   if (selectedDevice !== '') {
     var reader = readerOpt.find(e => e.name == selectedDevice);
     reader.aid = 'F222222222';
     var countNFC = 0;
+    let writeCount = writeStartNo;
     reader.on('card', async card => {
-        const tag = card.uid;
-        countNFC = countNFC + 1;
+      const tag = card.uid;
+      countNFC = countNFC + 1;
+      const data = await write(reader, initials + writeCount, tag);
 
-        const data = await write(reader, "123")
-
+      if (countNFC <= writeTotal) {
         if (data) {
-          insertToTable({
+          var nfcData = {
             "no": countNFC,
             "uid": tag,
             "data": data,
             "status": "OK",
-          }, "table1")
+          };
+
+          insertToTable(nfcData, "table1")
+
+          excelData.push(nfcData);
+
+          writeCount = writeCount + 1;
         } else {
           insertToTable({
             "no": countNFC,
@@ -98,6 +116,7 @@ document.getElementById('nfc_reader1').addEventListener('change', () => {
             "status": "ERR",
           }, "table1")
         }
+      }
     });
   } else {
     remote.getCurrentWindow().reload()
@@ -114,20 +133,21 @@ document.getElementById('nfc_reader2').addEventListener('change', () => {
       reader.on('card', async card => {
         const tag = card.uid;
         countNFC = countNFC + 1;
-        const data = await read(reader)
-
-        if (data) {
+        const dataRead = await read(reader)
+        const dataEncode = await encode(tag)
+        
+        if ((dataRead + dataEncode) === excelData[excelData.length - 1]["data"]) {
           insertToTable({
             "no": countNFC,
             "uid": tag,
-            "data": data,
+            "data": dataRead,
             "status": "OK",
           }, "table2")
         } else {
           insertToTable({
             "no": countNFC,
             "uid": tag,
-            "data": data,
+            "data": dataRead,
             "status": "ERR",
           }, "table2")
         }

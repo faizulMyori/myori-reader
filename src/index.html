@@ -224,13 +224,14 @@
                         <br><div class="row">
                             <div class="col-6">
                                 <label>Write Start Number</label>
-                                <input type="number" class="form-control" id="writeStartNo" placeholder="0">
+                                <input type="text" class="form-control" id="writeStartNo" placeholder="0" value="0000000">
                             </div>
                             <div class="col-6">
                                 <label>Write Total</label>
-                                <input type="number" class="form-control" id="writeTotal" placeholder="0">
+                                <input type="text" class="form-control" id="writeTotal" placeholder="0" value="0">
                             </div>
                         </div>
+                        <button type="button" id="setWriteData" style="width: 100%;" class="btn btn-primary">Set Write Data</button>
                         <hr>
                         <button type="button" id="uploadToServer" style="width: 100%;" class="btn btn-primary">Upload To Server</button>
                         <button type="button" id="downloadExcel" style="margin-top: 5px; width: 100%;" class="btn btn-secondary">Download Excel</button>
@@ -257,10 +258,10 @@
     let { app, remote, BrowserWindow, dialog } = require("electron");
     
     $(document).ready(function() {
-        $('#action_reader1').selectpicker();
-        $('#action_reader2').selectpicker();
-        $('#action_reader3').selectpicker();
-        $('#action_reader4').selectpicker();
+        // $('#action_reader1').selectpicker();
+        // $('#action_reader2').selectpicker();
+        // $('#action_reader3').selectpicker();
+        // $('#action_reader4').selectpicker();
     });
 </script>
 <script>
