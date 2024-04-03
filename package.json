@@ -1,7 +1,7 @@
 {
-  "name": "myori-petronas",
+  "name": "myori-reader",
   "version": "1.0.1",
-  "description": "MyOri Petronas NFC Reader",
+  "description": "MyOri NFC Reader",
   "main": "./src/main.js",
   "scripts": {
     "start": "electron-forge start",

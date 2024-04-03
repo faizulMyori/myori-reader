@@ -20,14 +20,14 @@ export async function read(reader) {
   }
 }
 
-export async function write(reader, nfcText, nfcUID, encode=true) {
+export async function write(reader, nfcText, nfcUID, encoding=true) {
   try {
     const cardHeader = await reader.read(0, 20);
     const tag = nfcCard.parseInfo(cardHeader);
 
     var message = '';
 
-    if (encode) {
+    if (encoding) {
       var encrypted = encode(nfcUID)
       nfcText = nfcText + encrypted;
     }
@@ -40,7 +40,7 @@ export async function write(reader, nfcText, nfcUID, encode=true) {
     const preparationWrite = await reader.write(4, rawDataToWrite.preparedData);
 
     if (preparationWrite) {
-      return true
+      return nfcText
     } else {
       return false
     }
@@ -49,7 +49,7 @@ export async function write(reader, nfcText, nfcUID, encode=true) {
   }
 }
 
-export async function encode(nfcUid) {
+export function encode(nfcUid) {
   var Crypto = require("crypto");
   var key = "0192380123687ff89719283798fe0cde";
   var iv = key.slice(0, 16);

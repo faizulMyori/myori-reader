@@ -1,6 +1,5 @@
 let { remote } = require("electron");
-import { data } from 'jquery';
-import { read } from './utils/myori-reader.js';
+import { read, encode, write } from './utils/myori-reader.js';
 
 // PLC Function
 const net = require('net');
@@ -78,8 +77,10 @@ var writeTotal = document.getElementById('writeTotal').value;
 
 document.getElementById('setWriteData').addEventListener('click', () => {
   initials = document.getElementById('writeInitials').value;
-  writeStartNo = document.getElementById('writeStartNo').value;
+  writeStartNo = parseInt(document.getElementById('writeStartNo').value);
   writeTotal = document.getElementById('writeTotal').value;
+
+  alert('Data Set!')
 })
 
 document.getElementById('nfc_reader1').addEventListener('change', () => {
@@ -89,10 +90,12 @@ document.getElementById('nfc_reader1').addEventListener('change', () => {
     reader.aid = 'F222222222';
     var countNFC = 0;
     let writeCount = writeStartNo;
+
     reader.on('card', async card => {
       const tag = card.uid;
       countNFC = countNFC + 1;
-      const data = await write(reader, initials + writeCount, tag);
+      let padLength = 28 - initials.length;
+      const data = await write(reader, initials + (writeCount.toString().padStart(padLength, '0')), tag);
 
       if (countNFC <= writeTotal) {
         if (data) {
@@ -134,9 +137,7 @@ document.getElementById('nfc_reader2').addEventListener('change', () => {
         const tag = card.uid;
         countNFC = countNFC + 1;
         const dataRead = await read(reader)
-        const dataEncode = await encode(tag)
-        
-        if ((dataRead + dataEncode) === excelData[excelData.length - 1]["data"]) {
+        if (dataRead === excelData[excelData.length - 1]["data"]) {
           insertToTable({
             "no": countNFC,
             "uid": tag,
@@ -225,12 +226,13 @@ document.getElementById('nfc_reader4').addEventListener('change', () => {
 })
 
 document.getElementById('downloadExcel').addEventListener('click', () => {
-  let data = processData(excelData)
+  let data = excelData
 
   const excelHeader = [
+    "No",
     "UID",
-    "Data",
-    "Type",
+    "Encrypted",
+    "Status",
   ]
 
   const XLSX = require('xlsx');
@@ -249,20 +251,13 @@ document.getElementById('downloadExcel').addEventListener('click', () => {
   worksheet["!cols"] = wscols;
 
   XLSX.writeFile(workbook, remote.app.getPath("downloads") + "/Petronas NFC Lists.xlsx", { compression: true });
+
+  alert('Excel file has been downloaded, please check your downloads folder');
 })
 
-function processData(data) {
-  var combinedData = [];
-  
-  data.map(arr => {
-    arr.child.map(arr2 => {
-      combinedData.push(arr2)
-    })
-    combinedData.push(arr.parent)
-  })
-
-  return combinedData;
-}
+document.getElementById('resetSytem').addEventListener('click', () => {
+  remote.getCurrentWindow().reload()
+})
 
 function insertToTable(data, tableID){
   var table = document.getElementById(tableID);
