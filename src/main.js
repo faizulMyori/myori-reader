@@ -1,6 +1,6 @@
 const { app, BrowserWindow, Menu, webContents  } = require('electron')
 const path = require('path')
-const env ='prod'; 
+const env ='development'; 
 
 if (require('electron-squirrel-startup')) app.quit();
 
@@ -26,14 +26,14 @@ function createWindow () {
     }
   })
 
-  const isMac = process.platform === 'darwin'
+  // const isMac = process.platform === 'darwin'
 
-  const template = [
+  // const template = [
     
-  ]
+  // ]
 
-  const menu = Menu.buildFromTemplate(template)
-  Menu.setApplicationMenu(menu)
+  // const menu = Menu.buildFromTemplate(template)
+  // Menu.setApplicationMenu(menu)
 
 
   win.loadFile(path.join(__dirname, 'index.html'))

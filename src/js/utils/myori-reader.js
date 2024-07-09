@@ -20,7 +20,7 @@ export async function read(reader) {
   }
 }
 
-export async function write(reader, nfcText, nfcUID, encoding=true) {
+export async function write(reader, nfcText, nfcUID, encoding=true, uri_instructions='https://smartsecure.myori.my/referral/instructions') {
   try {
     const cardHeader = await reader.read(0, 20);
     const tag = nfcCard.parseInfo(cardHeader);
@@ -33,6 +33,7 @@ export async function write(reader, nfcText, nfcUID, encoding=true) {
     }
 
     message = [
+      { type: "uri", uri: uri_instructions },
       { type: 'text', text: nfcText, language: 'en' }
     ];
     
