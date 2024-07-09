@@ -19,7 +19,9 @@ const parser = port.pipe(new ReadlineParser({ delimiter: "\r\n" }));
 
 // Open errors will be emitted as an error event
 port.on("error", function (err) {
-  console.log("Error: ", err.message);
+  isPLCConnected = true;
+  document.getElementById("plc_status").innerHTML = "Connecting...";
+  document.getElementById("plc_status").style.color = "red";
 });
 
 port.on("open", function () {
@@ -39,8 +41,26 @@ parser.on("data", function (data) {
 });
 
 document.getElementById("submitPlc").addEventListener("click", () => {
-  sendData(document.getElementById("writeToPLC").value);
+  // sendData(document.getElementById("writeToPLC").value);
 });
+
+async function listSerialPorts() {
+  await SerialPort.list().then((ports, err) => {
+    if(err) {
+      console.log(err);
+      return
+    } else {
+      console.log('');
+    }
+
+    if (ports.length === 0) {
+      console.log('No ports discovered')
+    }
+
+    console.log('ports', ports);
+  })
+}
+
 
 // NFC Function
 const { NFC } = require("nfc-pcsc");
